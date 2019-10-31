@@ -2,422 +2,141 @@
 # Functions With Arguments - Lab
 
 ## Introduction
-In this lesson, we have decided to visit one of our travel destinations! This time we have chosen to visit Albuquerque, but we aren't very familiar with this city and are quite hungry after our long flight. We will be working with information we pulled from the Yelp database to help us find a restaurant where we can satisfy our hunger. While Yelp is great for learning about what to do in Albuquerque, it gives us back a lot of information. We'll use what we know about functions and dictionaries to format and read our data more easily. 
+In this lesson, we have decided to visit one of our travel destinations! This time we have chosen to visit Albuquerque, but we aren't very familiar with this city and are quite hungry after our long flight. We will be working with information we obtained from Yelp and Google to help us find a restaurant where we can satisfy our hunger.
 
 ## Objectives
 You will be able to:
 * Declare and use a function with arguments
 
-## Exploring Two Restaurants in Albuquerque
+## Exploring Restaurants in Albuquerque
 
-Let's take a quick look at the information Yelp provides for a single restaurant:
-
-
-```python
-fork_fig = {'categories': [{'alias': 'burgers', 'title': 'Burgers'},
-  {'alias': 'sandwiches', 'title': 'Sandwiches'},
-  {'alias': 'salad', 'title': 'Salad'}],
- 'coordinates': {'latitude': 35.10871, 'longitude': -106.56739},
- 'display_phone': '(505) 881-5293',
- 'distance': 3571.724649307866,
- 'id': 'fork-and-fig-albuquerque',
- 'image_url': 'https://s3-media1.fl.yelpcdn.com/bphoto/_-DpXKfS3jv6DyA47g6Fxg/o.jpg',
- 'is_closed': False,
- 'location': {'address1': '6904 Menaul Blvd NE',
-  'address2': 'Ste C',
-  'address3': '',
-  'city': 'Albuquerque',
-  'country': 'US',
-  'display_address': ['6904 Menaul Blvd NE', 'Ste C', 'Albuquerque, NM 87110'],
-  'state': 'NM',
-  'zip_code': '87110'},
- 'name': 'Fork & Fig',
- 'phone': '+15058815293',
- 'price': '$$',
- 'rating': 4.5,
- 'review_count': 604, 
- 'transactions': [],
- 'url': 'https://www.yelp.com/biz/fork-and-fig-albuquerque?adjust_creative=SYc8R4Gowqru5h4SBKZXsQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=SYc8R4Gowqru5h4SBKZXsQ'}
-```
-
-Above is the information provided about `Fork & Fig`, but all restaurants are provided with this information.  For example, here is the information provided by Yelp for another restaurant, `Frontier Restaurant`.
+We've narrowed our search down to the 10 best restaurants in Albuquerque (according to a local guide), and collected their respective Yelp and Google ratings. The supposedly best restaurant is "Fork and Fig" (index 0) and the last spot of the top 10 is "Pollito con Papas".
 
 
 ```python
-frontier_restaurant = {'categories': [{'alias': 'mexican', 'title': 'Mexican'},
-  {'alias': 'diners', 'title': 'Diners'},
-  {'alias': 'tradamerican', 'title': 'American (Traditional)'}],
- 'coordinates': {'latitude': 35.0808088832532, 'longitude': -106.619402244687},
- 'display_phone': '(505) 266-0550',
- 'distance': 4033.6583235266075,
- 'id': 'frontier-restaurant-albuquerque-2',
- 'image_url': 'https://s3-media4.fl.yelpcdn.com/bphoto/M9L2z6-G0NobuDJ6YTh6VA/o.jpg',
- 'is_closed': False,
- 'location': {'address1': '2400 Central Ave SE',
-  'address2': '',
-  'address3': '',
-  'city': 'Albuquerque',
-  'country': 'US',
-  'display_address': ['2400 Central Ave SE', 'Albuquerque, NM 87106'],
-  'state': 'NM',
-  'zip_code': '87106'},
- 'name': 'Frontier Restaurant',
- 'phone': '+15052660550',
- 'price': '$',
- 'rating': 4.0,
- 'review_count': 1369,
- 'transactions': [],
- 'url': 'https://www.yelp.com/biz/frontier-restaurant-albuquerque-2?adjust_creative=SYc8R4Gowqru5h4SBKZXsQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=SYc8R4Gowqru5h4SBKZXsQ'}
+restaurants = ["Fork and Fig", "Fronties Restaurant", "Artichoke Cafe", "The Salt Yard", "Guava Tree Cafe"
+               "Cocina Azul", "Farina Pizzeria", "La Crepe Michel", "Antiquity Restaurant", "Pollito con Papas"]
+    
+yelp_rating = [4.3, 4.5, 3.9, 2.3, 4.9, 4.8, 4.2, 4.4, 4.6, 3.9]  
+
+google_rating = [4.9, 4.3, 4.7, 4.4, 3.2, 3.8, 4.8, 4.6, 4.2, 4.7]  
 ```
-
-As we already know, one way to quickly view the attributes of a dictionary is to look at the keys of the dictionary.
-
-
-```python
-fork_fig.keys()
-```
-
-
-
-
-    dict_keys(['categories', 'coordinates', 'display_phone', 'distance', 'id', 'image_url', 'is_closed', 'location', 'name', 'phone', 'price', 'rating', 'review_count', 'transactions', 'url'])
-
-
-
-
-```python
-frontier_restaurant.keys()
-```
-
-
-
-
-    dict_keys(['categories', 'coordinates', 'display_phone', 'distance', 'id', 'image_url', 'is_closed', 'location', 'name', 'phone', 'price', 'rating', 'review_count', 'transactions', 'url'])
-
-
-
-
-```python
-fork_fig.keys() == frontier_restaurant.keys()
-```
-
-
-
-
-    True
-
-
 
 As we can see from our above comparison, Yelp provides us with the same information for both restaurants.  
 
 ## Writing our functions
 
-Ok, now let's write our functions.  Write a function called `restaurant_name()` that, provided a dictionary representing a restaurant like you saw above, returns that restaurant's name.
+Ok, now let's write a function `restaurant_details()` that allows to take in an index number (0-9) representing the 1st to 10th spot. The desired output of the function is the following printout:
+
+" `restaurant name` has a Yelp Rating of `a` and a Google Rating of `b`"
 
 
 ```python
-def restaurant_name(restaurant):
-    return restaurant['name']
+def restaurant_details(index):
+    print(restaurants[index], "has a Yelp Rating of",yelp_rating[index],"and a Google Rating of", google_rating[index])
 ```
+
+Next, use your function to figure out the restaurant details for the restaurant with index 2.
 
 
 ```python
-restaurant_name(frontier_restaurant) # 'Frontier Restaurant'
+restaurant_details(2)
 ```
 
-
-
-
-    'Frontier Restaurant'
-
-
-
-
-```python
-restaurant_name(fork_fig) # 'Fork & Fig'
-```
-
-
-
-
-    'Fork & Fig'
-
-
-
-Now write a function called `restaurant_rating()` that returns the rating of the provided restaurant.
-
-
-```python
-def restaurant_rating(restaurant):
-    return restaurant['rating']
-```
-
-
-```python
-restaurant_rating(frontier_restaurant) # 4.0
-```
-
-
-
-
-    4.0
-
-
-
-
-```python
-restaurant_rating(fork_fig) # 4.5
-```
-
-
-
-
-    4.5
-
+    Artichoke Cafe has a Yelp Rating of 3.9 and a Google Rating of 4.7
 
 
 ## Comparing restaurants
 
-Now let's write a function called `is_better()` that returns `True` if a restaurant has a higher rating than an alternative restaurant.  The first argument should be called `restaurant` and the second argument should be called `alternative`.  The function returns `False` if the two ratings are equal.
+You would think that Restaurants higher up the list are rated better than restaurants lower down the list. Turns out that our guide has a slightly different perspective than the average Yelp or Google rater sometimes. 
 
+Now let's write a function called `is_better_yelp()`. The first argument should be called `index_a` and the second argument should be called `index_b`, and should contain the corresponding restaurant indices.
+
+The function should  return the following line if restaurant with index a has a higher Yelp rating than the one with index b:
+
+>  "`Restaurant with index a` is better than `Restaurant with index a` according to the Yelp rating"
+
+Alternatively, the function should return:
+
+>  "`Restaurant with index a` is not better than `Restaurant with index b` according to the Yelp rating"
+
+> **Note**: You haven't formally seen conditionals yet, but for this exercise, you'll be using something that looks like this in your code:
 
 ```python
-def is_better(restaurant, alternative):
-    if restaurant['rating'] > alternative['rating']:
-        return True
-    return False
+if yelp_rating[index_a] > yelp_rating[index_b]:
+        return "statement if condition is true"
+    else: 
+        return "statement if condition is false"
 ```
 
 
 ```python
-is_better(frontier_restaurant, fork_fig) # False
+def is_better(index_a, index_b)
+    if yelp_rating[index_a] > yelp_rating[index_b]:
+        return print(restaurants[index_a],"is better than", restaurants[index_b], "according to the Yelp rating")
+    else: 
+        return print(restaurants[index_a],"is not better than", restaurants[index_b], "according to the Yelp rating")
 ```
 
 
+      File "<ipython-input-8-709ac761f6b4>", line 2
+        def is_better(index_a, index_b)
+                                       ^
+    SyntaxError: invalid syntax
 
 
-    False
 
-
+Next, run your code for the restaurants listed 4th and 8th by our guide.
 
 
 ```python
-is_better(fork_fig, frontier_restaurant) # True
+is_better(3,7)
 ```
 
+According to Yelp, our restaurant listed as 8th is actually better than the restaurant listed on the 4th place!
 
-
-
-    True
-
-
-
-
-```python
-is_better(fork_fig, fork_fig) # False
-```
-
-
-
-
-    False
-
-
-
-Now let's write a function called `is_cheaper()` that returns `True` if a restaurant has a lower price, that is the restaurant has fewer `'$'` signs, than an alternative restaurant. The first argument should be called `restaurant` and the second argument should be called `alternative`. The function returns `False` if the two prices are equal.
-
-> **Hint:** *Strings in Python respond to then `len` function.*
-
-
-```python
-def is_cheaper(restaurant, alternative):
-    if len(restaurant['price']) < len(alternative['price']):
-        return True
-    return False
-```
-
-
-```python
-is_cheaper(fork_fig, frontier_restaurant) # False
-```
-
-
-
-
-    False
-
-
-
-
-```python
-is_cheaper(frontier_restaurant, fork_fig) # True
-```
-
-
-
-
-    True
-
-
-
-
-```python
-is_cheaper(fork_fig, fork_fig) # False
-```
-
-
-
-
-    False
-
-
-
-Now write a function called `high_rating()` that takes a `restaurant` as a first argument and a rating (in the form of a number) as the second argument and returns `True` if the given restaurant's rating is greater than or equal to the provided rating and returns `False` otherwise.
-
-
-```python
-def high_rating(restaurant, rating):
-    if restaurant['rating'] >= rating:
-        return True
-    return False
-```
-
-
-```python
-high_rating(fork_fig, 4) # True
-```
-
-
-
-
-    True
-
-
-
-
-```python
-high_rating(fork_fig, 5) # False
-```
-
-
-
-
-    False
-
-
-
-
-```python
-high_rating(frontier_restaurant, 4) # True
-```
-
-
-
-
-    True
-
-
-
-Awesome! We have built out some pretty cool functions so far. Let's now think about a case where we have more than just two data points to operate on. We have added some more "restaurants" below and are going to add them to our list of restaurants. Don't worry that they have a slightly different amount of data. 
-
-We are going to need a function `mean_review_count()` to give us an idea what the ideal range for `review_count` is. This function should take in a list of restaurant dictionaries and return the mean of the review counts for the collection of restaurant dictionaries. 
-
-
-```python
-dennys = {'categories': [{'alias': 'breakfast', 'title': 'Breakfast'},
-  {'alias': 'diners', 'title': 'Diners'},
-  {'alias': 'tradamerican', 'title': 'American (Traditional)'}],
- 'is_closed': False,
- 'name': "Denny's",
- 'price': '$',
- 'rating': 3.0,
- 'review_count': 1200}
-
-ihop = {'categories': [{'alias': 'breakfast', 'title': 'Breakfast'},
-  {'alias': 'diners', 'title': 'Diners'},
-  {'alias': 'tradamerican', 'title': 'American (Traditional)'}],
- 'is_closed': False,
- 'name': "IHOP: International House of Pancakes",
- 'price': '$',
- 'rating': 3.45,
- 'review_count': 1588}
-
-mcdonalds = {'categories': [{'alias': 'breakfast', 'title': 'Breakfast'},
-  {'alias': 'burgers', 'title': 'Burgers'},
-  {'alias': 'fast food', 'title': 'Good Food Fast'}],
- 'is_closed': False,
- 'name': "McDonalds",
- 'price': '$',
- 'rating': 3.45,
- 'review_count': 2455}
-
-pearl_street_oyster_bar = {'categories': [{'alias': 'seafood', 'title': 'Seafood'},
-  {'alias': 'gourmet', 'title': 'Gourmet'},
-  {'alias': 'Shellfish', 'title': 'Shellfish'}],
- 'is_closed': False,
- 'name': "Pear Street Oyster Bar",
- 'price': '$$$',
- 'rating': 4.75,
- 'review_count': 350}
-```
-
-
-```python
-restaurant_list = [pearl_street_oyster_bar, mcdonalds, ihop, dennys, fork_fig, frontier_restaurant]
-```
+Awesome! We have built out some pretty cool functions so far. Next, we want to see if on average, Yelp or Google ratings are higher. We are going to create a function `mean_review()` that takes in a list as an argument, and calculates the mean rating for the 10 restaurants. We'll apply the function _twice_, once for the Yelp Ratings, and once for the Google ratings!
 
 
 ```python
 # code goes here
-def mean_review_count(list_of_restaurants):
-    reviews = []
-    for rest in list_of_restaurants:
-        reviews.append(rest['review_count'])
-    mean = sum(reviews)/len(reviews)
+def mean_review(rating_list):
+    sum_all = 0
+    for rating in rating_list:
+        sum_all += rating
+    mean = sum_all/len(rating_list)
     return mean
 ```
 
+Use the function to compute the average Yelp Rating
+
 
 ```python
-mean_review_count(restaurant_list)
+mean_review(yelp_rating)
 ```
 
 
 
 
-    1261.0
+    4.18
 
 
 
-Next, let's maybe look at the median review, since we want to make sure that there aren't any outliers in our data. Ideally, the median and mean will be somewhat close, but obviously this would be more accurate given a larger sample size. Define a function `median_review_count()` that again takes in a list of restaurant dictionaries and returns the median count of reviews. Remember that if a dataset contains even number of data points, to get the median we average the two middle data points.
-
-
-```python
-# code goes here
-def median_review_count(list_of_restaurants):
-    length = len(list_of_restaurants)
-    n_reviews = sorted([r['review_count'] for r in list_of_restaurants])
-    if ((length % 2) == 0):
-        half = int(length/2)
-        median = (n_reviews[half] + n_reviews[half-1])/2
-        return median
-    else:
-        half = int((length - 1)/2)
-        median = n_reviews[half]
-        return median
-```
+Use the function to compute the average Google Rating
 
 
 ```python
-median_review_count(restaurant_list)
+mean_review(google_rating)
 ```
 
 
 
 
-    1284.5
+    4.36
 
 
+
+The Google ratings seem higher on average!
 
 ## Summary
 
